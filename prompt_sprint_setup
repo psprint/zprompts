@@ -1,0 +1,73 @@
+# Created by Sebastian Gniazdowski 
+# Added by
+
+prompt_sprint_help () {
+    cat <<EOF
+This prompt is color themable. You can invoke it in following way:
+
+prompt sprint <time/line color> <braces clr.> <text clr.> <at/colon clr.> <prompt clr.>
+
+You can provide only N first arguments, N=1..5.
+
+The default colors are: yellow red cyan yellow green
+EOF
+}
+
+prompt_sprint_setup () {
+    local col_time_line=${1:-'yellow'}
+    local col_parens=${2:-'red'}
+    local col_text=${3:-'cyan'}
+    local col_at_colon=${4:-'yellow'}
+    local col_prompt=${5:-'green'}
+
+    local -A schars
+    autoload -Uz prompt_special_chars
+    prompt_special_chars
+
+    local cl_time_line="%B%F{$col_time_line}"
+    local cl_text="%b%F{$col_text}"
+    local cl_parens="%B%F{$col_parens}"
+    local cl_at_colon="%b%F{$col_at_colon}"
+    local cl_prompt="%B%F{$col_prompt}"
+    local cl_rst="%b%f"
+
+    local _lpar="${cl_parens}["
+    local _rpar="${cl_parens}]"
+
+    local _time="$cl_time_line%D{%H:%M}"
+    local _user="$cl_text%n"
+    local _at="$cl_at_colon@$cl_text%m"
+    local _path="$cl_at_colon:$cl_text%30<*<%/"
+    local _line="$cl_time_line%i"
+    local _prompt="$cl_prompt# "
+    PS1="$_time$_lpar$_user$_at$_path$_rpar$_line$_prompt$cl_rst"
+
+    PS2="$cl_parens> $cl_rst"
+
+    prompt_opts=(cr subst percent)
+}
+
+prompt_sprint_preview () {
+    local -a colors_time_line colors_text
+    colors_time_line=(red yellow green blue magenta cyan)
+    colors_text=(red yellow green blue magenta cyan)
+
+    local ctime_line ctext i j
+
+    if (( ! $#* )); then
+        for (( i = 1; i <= ${#colors_time_line}; i++ )); do
+            ctime_line="${colors_time_line[$i]}"
+            for (( j = 1; j <= ${#colors_text}; j++ )); do
+                ctext="${colors_text[$j]}"
+                prompt_preview_theme sprint "$ctime_line" "red" "$ctext"
+                (( i != ${#colors_time_line} || j != ${#colors_text} )) && print
+            done
+        done
+    else
+        prompt_preview_theme sprint "$@"
+    fi
+}
+
+prompt_sprint_setup "$@"
+
+# vim:ft=zsh
