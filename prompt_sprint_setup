@@ -36,7 +36,7 @@ prompt_sprint_setup () {
     local _time="$cl_time_line%D{%H:%M}"
     local _user="$cl_text%n"
     local _at="$cl_at_colon@$cl_text%m"
-    local _path="$cl_at_colon:$cl_text%30<*<%/%<<"
+    local _path="$cl_at_colon:$cl_text%28<*<%/%<<"
     local _line="$cl_time_line%i"
     local _prompt="$cl_prompt# "
     PS1="$_time$_lpar$_user$_at$_path$_rpar$_line$_prompt$cl_rst"
