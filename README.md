@@ -7,7 +7,7 @@ To use first load the plugin:
 source {where-zprompts-is}/zprompts.plugin.zsh
 ```
 
-And then invoke e.g.:
+and then invoke (to use theme `sprint`) e.g.:
 
 ```zsh
   autoload -Uz promptinit
@@ -15,4 +15,5 @@ And then invoke e.g.:
   prompt sprint
 ```
 
-To use the theme `sprint`.
+Currently, there are two prompts `sprint` and `scala`. Please submit your
+prompt if you find a time to write the `prompt_NAME_setup` file.
