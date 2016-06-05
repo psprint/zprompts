@@ -1,5 +1,4 @@
 # Created by Sebastian Gniazdowski 
-# Added by
 
 prompt_sprint_help () {
     cat <<EOF
