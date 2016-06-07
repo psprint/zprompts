@@ -33,6 +33,12 @@ You can provide only N first arguments, N=1..4.
 The default invocation is: ":: " cyan cyan magenta
 ```
 
+## Video
+
+Video showing a feature – information about how old are repository's unstaged changes
+
+[![asciicast](https://asciinema.org/a/48122.png)](https://asciinema.org/a/48122)
+
 ## Screenshots
 
 Sprint:
