@@ -34,6 +34,11 @@ prompt_scala_setup () {
     prompt_opts=(cr subst percent)
 
     zstyle ':vcs_info:*' enable git svn darcs bzr hg
+    zstyle ':vcs_info:*' stagedstr "S"
+    zstyle ':vcs_info:*' unstagedstr "U"
+    zstyle ':vcs_info:*' check-for-changes false
+    zstyle ':vcs_info:*' formats " (%s)-[%b]%u%c-"
+
     add-zsh-hook precmd prompt_scala_precmd
 }
 
