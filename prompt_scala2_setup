@@ -45,7 +45,7 @@ prompt_scala_setup () {
 }
 
 prompt_scala_precmd () {
-    setopt noxtrace noksharrays localoptions
+    setopt localoptions noxtrace noksharrays
 
     local -a changed_files
     changed_files=( )

@@ -55,7 +55,7 @@ prompt_sprint_setup () {
 }
 
 prompt_sprint_precmd () {
-  setopt noxtrace noksharrays localoptions
+  setopt localoptions noxtrace noksharrays 
 
   # You can instantly shorten the prompt by setting PSSHORT=1
   if [[ "$COLUMNS" -le 94 || "$PSSHORT" = "1" ]]; then
