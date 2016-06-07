@@ -54,7 +54,7 @@ prompt_sprint2_setup () {
     zstyle ':vcs_info:*' stagedstr "%F{green}●$cl_rst"
     zstyle ':vcs_info:*' unstagedstr "%F{yellow}●$cl_rst"
     zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' formats '(%s)-[%b%c%u]-'
+    zstyle ':vcs_info:*' formats '(%s)-[%b%u%c]-'
 
     add-zsh-hook precmd prompt_sprint2_precmd
 }
@@ -79,9 +79,9 @@ prompt_sprint2_precmd () {
     fi
 
     if [[ "${#changed_files}" -eq 0 ]]; then
-        zstyle ':vcs_info:*' formats ' (%s)-[%b%c%u]'
+        zstyle ':vcs_info:*' formats ' (%s)-[%b%u%c]'
     else
-        zstyle ':vcs_info:*' formats ' (%s)-[%b%c%u%B%F{yellow}-OLD-%%b%f]'
+        zstyle ':vcs_info:*' formats ' (%s)-[%b%u%B%F{yellow}-OLD-%c%%b%f]'
     fi
 
     vcs_info
