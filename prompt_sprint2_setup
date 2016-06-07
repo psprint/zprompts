@@ -62,7 +62,7 @@ prompt_sprint2_setup () {
 prompt_sprint2_precmd () {
     setopt noxtrace noksharrays localoptions
 
-    if (( COLUMNS < 85 )); then
+    if (( COLUMNS <= 90 )); then
         _psvar=()
     else
         _psvar[user]='%n'
