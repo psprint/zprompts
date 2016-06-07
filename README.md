@@ -18,6 +18,21 @@ and then invoke (to use theme `scala3`) e.g.:
 Please submit your prompt if you find a time to write the `prompt_NAME_setup`
 file.
 
+## Help for the prompts
+
+Each prompt has its help available with `prompt -h {name}`, e.g. for
+the theme `scala`:
+
+```
+This prompt is themable. You can invoke it in following way:
+
+prompt scala <prompt, default is ":: "> <prompt color> <path color> <vcs info color>
+
+You can provide only N first arguments, N=1..4.
+
+The default invocation is: ":: " cyan cyan magenta
+```
+
 ## Screenshots
 
 Sprint:
