@@ -62,7 +62,8 @@ prompt_sprint2_setup () {
 prompt_sprint2_precmd () {
     setopt noxtrace noksharrays localoptions
 
-    if (( COLUMNS <= 90 )); then
+    # You can instantly shorten the prompt by setting PSSHORT=1
+    if [[ "$COLUMNS" -le 94 || "$PSSHORT" = "1" ]]; then
         _psvar=()
     else
         _psvar[user]='%n'
