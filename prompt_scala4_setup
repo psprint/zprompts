@@ -53,7 +53,6 @@ prompt_scala4_setup () {
 }
 
 _prompt_scala4_display() {
-    setopt localoptions noextendedglob
     integer lim=4
 
     if (( _psdispcount <= ${#_psfiles} )); then
@@ -74,7 +73,7 @@ _prompt_scala4_display() {
 
     _psdispcount+=1
 
-    zle reset-prompt
+    zle && zle reset-prompt
 }
 
 prompt_scala4_precmd () {
