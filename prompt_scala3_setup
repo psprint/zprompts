@@ -1,6 +1,6 @@
 # Created by Sebastian Gniazdowski 
 
-prompt_scala_help () {
+prompt_scala3_help () {
     cat <<EOF
 This prompt is themable. You can invoke it in following way:
 
@@ -12,7 +12,7 @@ The default invocation is: ":: " cyan cyan magenta
 EOF
 }
 
-prompt_scala_setup () {
+prompt_scala3_setup () {
     local prompt_left=${1:-':: '}
     local col_left=${2:-'cyan'}
     local col_path=${3:-'cyan'}
@@ -42,10 +42,10 @@ prompt_scala_setup () {
     zstyle ':vcs_info:*' check-for-changes true
     zstyle ':vcs_info:*' formats '(%s)-[%b%u%c]-'
 
-    add-zsh-hook precmd prompt_scala_precmd
+    add-zsh-hook precmd prompt_scala3_precmd
 }
 
-prompt_scala_precmd () {
+prompt_scala3_precmd () {
     setopt noxtrace noksharrays localoptions
 
     local -a changed_files
@@ -77,7 +77,7 @@ prompt_scala_precmd () {
     vcs_info
 }
 
-prompt_scala_preview () {
+prompt_scala3_preview () {
     local -a colors_prompt
     colors_prompt=(red yellow green blue magenta cyan)
 
@@ -95,6 +95,6 @@ prompt_scala_preview () {
     fi
 }
 
-prompt_scala_setup "$@"
+prompt_scala3_setup "$@"
 
 # vim:ft=zsh
