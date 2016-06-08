@@ -62,9 +62,6 @@ _prompt_scala4_display() {
         _psdispcount=lim
     fi
 
-    # 1.5 seconds in total
-    LANG=C sleep 0.5
-
     if (( _psdispcount < lim )); then
         sched +1 _prompt_scala4_display
     else
