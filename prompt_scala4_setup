@@ -63,7 +63,7 @@ _prompt_scala4_display() {
     fi
 
     if (( _psdispcount < lim )); then
-        sched +1 _prompt_scala4_display
+        sched +2 _prompt_scala4_display
     else
         _psvar[path]="${_psvar[cl_path]}%28<*<%/%<<"
     fi
