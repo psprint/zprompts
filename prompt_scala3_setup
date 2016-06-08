@@ -53,8 +53,10 @@ prompt_scala3_precmd () {
     changed_files=( )
     git diff --quiet 2>/dev/null || changed_files=( ${(f)"$( git diff --name-only 2>/dev/null )"} )
     if [[ "${#changed_files}" -gt 0 ]]; then
+        local basedir
+        basedir="$(git rev-parse --show-toplevel)/"
         local -a stat_result
-        stat_result=( ${(f)"$( zstat "${changed_files[@]}" )"} )
+        stat_result=( ${(f)"$( zstat "${basedir}${^changed_files[@]}" )"} )
         stat_result=( "${(M)stat_result[@]:#mtime*}" )
         stat_result=( "${stat_result[@]/mtime[^0-9]#/}" )
 
