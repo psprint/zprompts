@@ -75,11 +75,11 @@ prompt_scala2_preview () {
     if (( ! $#* )); then
         for (( i = 1; i <= ${#colors_prompt}; i++ )); do
             cprompt="${colors_prompt[$i]}"
-            prompt_preview_theme scala ":: " "$cprompt" "$cprompt"
+            prompt_preview_theme scala2 ":: " "$cprompt" "$cprompt"
             (( i != ${#colors_prompt} )) && print
         done
     else
-        prompt_preview_theme scala "$@"
+        prompt_preview_theme scala2 "$@"
     fi
 }
 
