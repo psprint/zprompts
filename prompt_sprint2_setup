@@ -76,7 +76,9 @@ prompt_sprint2_precmd () {
     changed_files=( )
     git diff --quiet 2>/dev/null || changed_files=( ${(f)"$( git diff --name-only 2>/dev/null )"} )
     if [[ "${#changed_files}" -gt 0 ]]; then
-        changed_files=( ${(f)"$( find "${changed_files[@]}" -mtime +2 )"} )
+        local basedir
+        basedir="$(git rev-parse --show-toplevel)/"
+        changed_files=( ${(f)"$( find "${basedir}${^changed_files[@]}" -mtime +2 )"} )
     fi
 
     if [[ "${#changed_files}" -eq 0 ]]; then
