@@ -4,7 +4,7 @@ prompt_scala3_help () {
     cat <<EOF
 This prompt is themable. You can invoke it in following way:
 
-prompt scala <prompt, default is ":: "> <prompt color> <path color> <vcs info color>
+prompt scala3 <prompt, default is ":: "> <prompt color> <path color> <vcs info color>
 
 You can provide only N first arguments, N=1..4.
 
