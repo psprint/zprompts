@@ -65,3 +65,7 @@ Scala3:
 
 ![scala3](https://github.com/psprint/zprompts/blob/img/img/scala3.png)
 
+Scala4:
+
+![scala3](https://github.com/psprint/zprompts/blob/img/img/scala4.gif)
+
