@@ -80,10 +80,13 @@ prompt_scala4_precmd () {
     setopt noxtrace noksharrays localoptions
 
     local day_info=""
+
     typeset -ga _psfiles
     _psfiles=( )
+
     local -a changed_files
     changed_files=( )
+
     git diff --quiet 2>/dev/null || changed_files=( ${(f)"$( git diff --name-only 2>/dev/null )"} )
     if [[ "${#changed_files}" -gt 0 ]]; then
         local basedir
