@@ -1,0 +1,187 @@
+# Created by Sebastian Gniazdowski 
+
+prompt_sprint4_help () {
+    cat <<EOF
+This prompt is color themable. You can invoke it in following way:
+
+prompt sprint4 <time/line color> <braces clr.> <text clr.> <at/colon clr.> <prompt clr.>
+
+You can provide only N first arguments, N=1..5.
+
+The default colors are: yellow red cyan yellow green
+EOF
+}
+
+prompt_sprint4_setup () {
+    local col_time_line=${1:-'yellow'}
+    local col_parens=${2:-'red'}
+    local col_text=${3:-'cyan'}
+    local col_at_colon=${4:-'yellow'}
+    local col_prompt=${5:-'green'}
+
+    zmodload -F zsh/stat b:zstat
+    zmodload zsh/sched
+    autoload -Uz vcs_info
+
+    typeset -ga _oldpsfiles
+    _oldpsfiles=( )
+
+    typeset -gA _psvar
+
+    local cl_time_line="%B%F{$col_time_line}"
+    local cl_text="%b%F{$col_text}"
+    local cl_parens="%B%F{$col_parens}"
+    local cl_at_colon="%b%F{$col_at_colon}"
+    local cl_prompt="%B%F{$col_prompt}"
+    local cl_rst="%b%f"
+
+    local _lpar="${cl_parens}["
+    local _rpar="${cl_parens}]"
+
+    local _time="$cl_time_line%D{%H:%M}"
+    _psvar[user]='%n'
+    local _user="$cl_text"'${_psvar[user]}'
+    _psvar[at]="@"
+    _psvar[host]='%m'
+    local _at="$cl_at_colon"'${_psvar[at]}'"$cl_text"'${_psvar[host]}'
+    _psvar[colon]=':'
+    _psvar[cl_text]="$cl_text"
+    _psvar[path]="${_psvar[cl_text]}%28<*<%/%<<"
+    local _path="$cl_at_colon"'${_psvar[colon]}${_psvar[path]}'
+    local _line="$cl_time_line%i"
+    local _prompt="$cl_prompt# "
+    PS1="$_time$_lpar$_user$_at$_path$_rpar$_line$_prompt$cl_rst"
+
+    PS2="$cl_parens> $cl_rst"
+
+    RPS1='${vcs_info_msg_0_}'
+    prompt_opts=(cr subst percent)
+
+    zstyle ':vcs_info:*' enable git svn darcs bzr hg
+    zstyle ':vcs_info:*' stagedstr "%F{green}●$cl_rst"
+    zstyle ':vcs_info:*' unstagedstr "%F{yellow}●$cl_rst"
+    zstyle ':vcs_info:*' check-for-changes true
+    zstyle ':vcs_info:*' formats '(%s)-[%b%u%c]-'
+
+    add-zsh-hook precmd prompt_sprint4_precmd
+}
+
+_prompt_sprint4_display() {
+    integer lim=4
+
+    if (( _psdispcount <= ${#_psfiles} )); then
+        _psvar[path]="${_psvar[cl_text]}${_psfiles[_psdispcount]#* }"
+    else
+        # All displayed, cancel
+        _psdispcount=lim
+    fi
+
+    # 1.5 seconds in total
+    LANG=C sleep 0.5
+
+    if (( _psdispcount < lim )); then
+        sched +1 _prompt_sprint4_display
+    else
+        _psvar[path]="${_psvar[cl_text]}%28<*<%/%<<"
+    fi
+
+    _psdispcount+=1
+
+    zle && zle reset-prompt
+}
+
+prompt_sprint4_precmd () {
+    setopt localoptions noxtrace noksharrays extendedglob
+
+    # You can instantly shorten the prompt by setting PSSHORT=1
+    if [[ "$COLUMNS" -le 94 || "$PSSHORT" = "1" ]]; then
+        _psvar[user]=''
+        _psvar[at]=""
+        _psvar[host]=''
+        _psvar[colon]=''
+    else
+        _psvar[user]='%n'
+        _psvar[at]="@"
+        _psvar[host]='%m'
+        _psvar[colon]=':'
+    fi
+
+    local day_info=""
+
+    typeset -ga _psfiles
+    _psfiles=( )
+
+    local -a changed_files
+    changed_files=( )
+
+    git diff --quiet 2>/dev/null || changed_files=( ${(f)"$( git diff --name-only 2>/dev/null )"} )
+    if [[ "${#changed_files}" -gt 0 ]]; then
+        local basedir
+        basedir="$(git rev-parse --show-toplevel)/"
+        local -a stat_result
+        stat_result=( ${(f)"$( zstat "${basedir}${^changed_files[@]}" )"} )
+        stat_result=( "${(M)stat_result[@]:#mtime*}" )
+        stat_result=( "${stat_result[@]/mtime[^0-9]#/}" )
+
+        integer min_timestamp=stat_result[1]
+        for i in "${stat_result[@]}"; do
+            (( i < min_timestamp )) && min_timestamp=i
+        done
+
+        integer cur_timestamp=$( date +%s )
+        integer days=$(( (cur_timestamp-min_timestamp)/(24*60*60) ))
+        (( days > 0 )) && day_info="$days days"
+
+        # Construct array with each timestamp and file
+        integer size=${#changed_files}
+        for (( i=1; i<=size; i++ )); do
+            _psfiles+=( "${stat_result[i]} ${changed_files[i]}" )
+        done
+
+        # Sort
+        _psfiles=( "${(on)_psfiles[@]}" )
+    fi
+
+    if [[ -z "$day_info" ]]; then
+        zstyle ':vcs_info:*' formats ' (%s)-[%b%u%c]'
+    else
+        zstyle ':vcs_info:*' formats ' (%s)-[%b%u%B%F{yellow}-'"$day_info"'-%c%%b%f]'
+    fi
+
+    vcs_info
+
+    # Start oldest file display?
+    # Check if array _psfiles is different from _oldpsfiles
+    typeset -aU compare
+    compare=( "${_psfiles[@]}" "${_oldpsfiles[@]}" )
+    if [[ "${#compare}" -ne "${#_oldpsfiles}" ]]; then
+        integer -g _psdispcount=1
+        sched +1 _prompt_sprint4_display
+    fi
+    _oldpsfiles=( "${_psfiles[@]}" )
+}
+
+prompt_sprint4_preview () {
+    local -a colors_time_line colors_text
+    colors_time_line=(red yellow green blue magenta cyan)
+    colors_text=(red yellow green blue magenta cyan)
+
+    local ctime_line ctext i j
+
+    if (( ! $#* )); then
+        for (( i = 1; i <= ${#colors_time_line}; i++ )); do
+            ctime_line="${colors_time_line[$i]}"
+            for (( j = 1; j <= ${#colors_text}; j++ )); do
+                ctext="${colors_text[$j]}"
+                prompt_preview_theme sprint4 "$ctime_line" "red" "$ctext"
+                (( i != ${#colors_time_line} || j != ${#colors_text} )) && print
+            done
+        done
+    else
+        prompt_preview_theme sprint4 "$@"
+    fi
+}
+
+prompt_sprint4_setup "$@"
+
+# vim:ft=zsh
