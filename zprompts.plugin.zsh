@@ -9,3 +9,7 @@ REPO_DIR="${0%/*}"
 if [[ "${fpath[(r)$REPO_DIR]}" != $REPO_DIR ]]; then
     fpath+=( "$REPO_DIR" )
 fi
+
+if (( ${+functions[promptinit]} == 0 )); then
+    autoload promptinit
+fi

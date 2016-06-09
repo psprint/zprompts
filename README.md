@@ -10,7 +10,6 @@ source {where-zprompts-is}/zprompts.plugin.zsh
 and then invoke (to use theme `scala3`) e.g.:
 
 ```zsh
-  autoload -Uz promptinit
   promptinit
   prompt scala3
 ```
