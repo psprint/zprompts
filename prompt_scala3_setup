@@ -60,7 +60,8 @@ prompt_scala3_precmd () {
         stat_result=( "${(M)stat_result[@]:#mtime*}" )
         stat_result=( "${stat_result[@]/mtime[^0-9]#/}" )
 
-        integer min_timestamp=stat_result[1] i
+        integer min_timestamp i
+        min_timestamp=stat_result[1]
         for i in "${stat_result[@]}"; do
             (( i < min_timestamp )) && min_timestamp=i
         done
