@@ -50,6 +50,7 @@ prompt_scala2_precmd () {
     local -a changed_files
     changed_files=( )
     git diff --quiet 2>/dev/null || changed_files=( ${(f)"$( git diff --name-only 2>/dev/null )"} )
+    changed_files=( $^changed_files(N) )
     if [[ "${#changed_files}" -gt 0 ]]; then
         local basedir
         basedir="$(git rev-parse --show-toplevel)/"
