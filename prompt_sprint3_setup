@@ -44,6 +44,17 @@ prompt_sprint3_setup () {
     local _path="$cl_at_colon"'${_psvar[colon]}'"$cl_text%28<*<%/%<<"
     local _line="$cl_time_line%i"
     local _prompt="$cl_prompt# "
+
+    # You can instantly shorten the prompt by setting PSSHORT=1
+    if [[ "$COLUMNS" -le 94 || "$PSSHORT" = "1" ]]; then
+        _psvar=()
+    else
+        _psvar[user]='%n'
+        _psvar[at]="@"
+        _psvar[host]='%m'
+        _psvar[colon]=':'
+    fi
+
     PS1="$_time$_lpar$_user$_at$_path$_rpar$_line$_prompt$cl_rst"
 
     PS2="$cl_parens> $cl_rst"
