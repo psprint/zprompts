@@ -11,6 +11,6 @@ if [[ "${fpath[(r)$REPO_DIR]}" != $REPO_DIR ]]; then
     fpath+=( "$REPO_DIR" )
 fi
 
-if (( ${+functions[promptinit]} == 0 )); then
+if (( !${+functions[promptinit]} )); then
     autoload promptinit
 fi
