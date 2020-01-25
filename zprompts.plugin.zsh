@@ -5,10 +5,13 @@
 # to ~/.zshrc.
 #
 
-0="${(%):-%N}" # this gives immunity to functionargzero being unset
-REPO_DIR="${0%/*}"
-if [[ "${fpath[(r)$REPO_DIR]}" != $REPO_DIR ]]; then
-    fpath+=( "$REPO_DIR" )
+0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
+ZPROMPTS_REPO_DIR="${0:h}"
+
+if [[ ${zsh_loaded_plugins[-1]} != */zprompts && -z ${fpath[(r)${0:h}]} ]]
+then
+    fpath+=( "${0:h}" )
 fi
 
 if (( !${+functions[promptinit]} )); then
